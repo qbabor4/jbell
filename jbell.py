@@ -1,17 +1,18 @@
 #-*- coding: utf-8 -*-
-import sys, shlex, os
+import sys, shlex
+from os import fork,popen,chdir,execvp,WIFEXITED,WIFSIGNALED,waitpid
 import getpass
 
 built_in_cmds = {}
 
 def get_pwd():
-    p = os.popen("pwd")
+    p = popen("pwd")
     output = p.read()
     p.close()
     return output[:-1]
 
 def get_ls():
-    p = os.popen("ls")
+    p = popen("ls")
     output = p.read()
     p.close()
     return output
@@ -19,7 +20,7 @@ def get_ls():
 def cd(args):
     if args:
         try :
-            os.chdir(args[0])
+            chdir(args[0])
         except OSError as e:
             print "No such file or directory"
 
@@ -67,12 +68,12 @@ def execute(cmd_tokens):
     if cmd_name in built_in_cmds:
         return built_in_cmds[cmd_name](cmd_args)
     
-    pid = os.fork()
+    pid = fork()
     if pid == 0:
     # Child process
         # Replace the child shell process with the program called with exec
         try:
-            os.execvp(cmd_tokens[0], cmd_tokens)
+            execvp(cmd_tokens[0], cmd_tokens)
         except OSError as e:
             print "Error: jbell doesnt recognise given command"
         
@@ -80,11 +81,11 @@ def execute(cmd_tokens):
     # Parent process
         while True:
             # Wait response status from its child process (identified with pid)
-            wpid, status = os.waitpid(pid, 0)
+            wpid, status = waitpid(pid, 0)
 
             # Finish waiting if its child process exits normally
             # or is terminated by a signal
-            if os.WIFEXITED(status) or os.WIFSIGNALED(status):
+            if WIFEXITED(status) or WIFSIGNALED(status):
                 break
 
     # Return status indicating to wait for next command in shell_loop
