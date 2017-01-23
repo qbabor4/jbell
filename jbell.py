@@ -9,8 +9,17 @@ def get_pwd():
     p.close()
     return output[:-1]
 
+def get_ls():
+    p = os.popen("ls")
+    output = p.read()
+    p.close()
+    return output
+
 def cd(args):
-    os.chdir(args[0])
+    try :
+        os.chdir(args[0])
+    except OSError as e:
+        print "No such file or directory"
 
     return 1
 
@@ -27,8 +36,8 @@ def register_command(name, func):
 def shell_loop():
     # start loop
     status = 1
-    pwd = get_pwd()
     while status == 1:
+        pwd = get_pwd()
         sys.stdout.write(pwd + ' > ')
         sys.stdout.flush()
 
@@ -60,7 +69,11 @@ def execute(cmd_tokens):
     if pid == 0:
     # Child process
         # Replace the child shell process with the program called with exec
-        os.execvp(cmd_tokens[0], cmd_tokens)
+        try:
+            os.execvp(cmd_tokens[0], cmd_tokens)
+        except OSError as e:
+            print "Error: jbell doesnt recognise given command"
+        
     elif pid > 0:
     # Parent process
         while True:
