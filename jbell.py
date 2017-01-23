@@ -16,10 +16,11 @@ def get_ls():
     return output
 
 def cd(args):
-    try :
-        os.chdir(args[0])
-    except OSError as e:
-        print "No such file or directory"
+    if args:
+        try :
+            os.chdir(args[0])
+        except OSError as e:
+            print "No such file or directory"
 
     return 1
 
