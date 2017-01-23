@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 import sys, shlex, os
+import getpass
 
 built_in_cmds = {}
 
@@ -39,7 +40,7 @@ def shell_loop():
     status = 1
     while status == 1:
         pwd = get_pwd()
-        sys.stdout.write(pwd + ' > ')
+        sys.stdout.write("user:" + getpass.getuser() +" " + pwd + ' > ')
         sys.stdout.flush()
 
         cmd = sys.stdin.readline()
