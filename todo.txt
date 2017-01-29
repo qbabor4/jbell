@@ -1,1 +1,3 @@
-Ogarnac blad przy zlym wpisaniu polecenia
+jak się wpisuje cos poza komendami, to chyba nie zwraca 0 i proces sie nie zabija.
+tyle razy ile jest wpisane cos innego trzeba wpisac exit zeby wyjsc
+moze dac os.fork() gdzies indziej
